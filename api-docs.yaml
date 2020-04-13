@@ -1,0 +1,43 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python.
+# Creation static html documentation file and add to the PR.
+#
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: api-docs
+#name: Houston Service - API documentation workflow
+
+on:
+  push:
+    branches: []
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: stugit/coursera_scala_specialisation
+        path: .
+    - name: Install redoc-cli and generate API docs
+      shell: bash
+      run: |
+        npm install redoc-cli
+        npx redoc-cli bundle openapi/houston_service.yml --title "Houston Service REST API"
+        rm -fr node_modules
+        rm -fr package-lock.json
+    - name: git add, commit and push
+      shell: bash
+      run: |
+        git config user.email karwoo.tang@gmail.com
+        git config user.name "stugit"
+        chmod 777 redoc-static.html
+        git add redoc-static.html
+        git commit -m "Add automatically generated redoc HTML documentation" 
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: api-docs
+        force: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
