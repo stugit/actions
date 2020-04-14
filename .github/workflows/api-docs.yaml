@@ -37,9 +37,13 @@ jobs:
         chmod 777 redoc-static.html
         git add redoc-static.html
         git commit -m "Add automatically generated redoc HTML documentation" 
+    - name: Extract current branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        #branch: api-docs
+        branch: ${{ steps.extract_branch.outputs.branch }}
         force: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
