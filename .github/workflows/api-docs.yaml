@@ -34,8 +34,10 @@ jobs:
         git config user.email git.action@example.com
         git config user.name "example"
         chmod 777 redoc-static.html
-        git add redoc-static.html
-        git commit -m "Add automatically generated openapi static HTML documentation" 
+        if ! git diff --no-ext-diff --quiet --exit-code; then
+          git add redoc-static.html
+          git commit -m "Add automatically generated openapi static HTML documentation" 
+        fi
     - name: Extract current branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
