@@ -1,0 +1,47 @@
+# This workflow will run semver.pl and update the versions.json file in the root folder.
+# The version.jsonfile is then added, commited and pushed to the current branch.
+
+name: semver
+#name: Houston Service - semver workflow
+
+on:
+  push:
+    branches: 
+      - '*'
+      - '!master'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: stugit/actions
+        path: .
+    - name: run semver
+      shell: bash
+      run: |
+        chmod +x scripts/date.sh
+        sudo scripts/date.sh > date.txt
+    - name: git add, commit and push
+      shell: bash
+      run: |
+        git config user.email git.action@example.com
+        git config user.name "example"
+        # check if file changed
+        if ! git diff --no-ext-diff --quiet --exit-code; then
+          git add date.txt
+          git commit -m "Add date.txt" 
+        fi
+    - name: Extract current branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: ${{ steps.extract_branch.outputs.branch }}
+        force: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
