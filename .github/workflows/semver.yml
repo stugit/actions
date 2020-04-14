@@ -23,8 +23,7 @@ jobs:
     - name: run semver
       shell: bash
       run: |
-        ls -alrt 
-        scripts/date.sh > date.txt
+        sudo scripts/date.sh > date.txt
     - name: git add, commit and push
       shell: bash
       run: |
