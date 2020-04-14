@@ -20,7 +20,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        repository: stugit/coursera_scala_specialisation
+        repository: stugit/actions
         path: .
     - name: Install redoc-cli and generate API docs
       shell: bash
