@@ -6,10 +6,12 @@ name: api-docs
 #name: Houston Service - API documentation workflow
 
 on:
-  push:
-    branches: 
-      - '*'
-      - '!master'
+  push
+
+#  push:
+#    branches: 
+#      - '*'
+#      - '!master'
 
 jobs:
   build:
