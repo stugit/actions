@@ -1,0 +1,2272 @@
+openapi: 3.0.0
+info:
+  description: | 
+    TranquilityBase Houston Backend REST API Service.
+    The Houston Service is the name of the backend service for the Eagle Console.
+    There is more information about the Houston Service here.
+    https://github.com/tranquilitybase-io/tb-houston-service/wiki.
+    There is more information about the Eagle Console here.
+    https://github.com/tranquilitybase-io/tb-eagle-console/wiki
+
+  version: 2.0.0
+  title: TB Houston Service
+  termsOfService: "https://github.com/tranquilitybase-io/tb-houston-service/wiki/Terms-of-service"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+
+paths:
+  /login:
+    post:
+      operationId: login.check_credentials
+      tags:
+        - login
+      summary: login credentials check
+      description: This endpoint is used to check login credentials.
+      requestBody:
+        $ref: "#/components/requestBodies/login.loginDetails"
+      responses:
+        "201":
+          description: The login was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The email address
+                  firstName:
+                    type: string
+                    description: The user's first name
+                  lastName:
+                    type: string
+                    description: The user's last name
+                  isAdmin:
+                    type: boolean
+                    description: is the user an admin user?
+  /health:
+    get:
+      operationId: health.check
+      tags:
+        - health
+      summary: The Houston Service general health check.
+      description: Return the health of the Houston service.
+      responses:
+        "200":
+          description: Successfully returned the health of the Houston Service.
+
+  /applications/:
+    get:
+      operationId: application.read_all
+      tags:
+        - application
+      summary: Read the entire list of applications
+      description: Read the list of applications
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: activatorId
+          schema:
+            type: integer
+        - in: query
+          name: environment
+          schema:
+            type: string
+        - in: query 
+          name: page
+          schema:
+            type: integer
+        - in: query 
+          name: page_size
+          schema:
+            type: integer
+        - in: query 
+          name: sort
+          schema:
+            type: array
+            items:
+              type: string
+          explode: true
+      responses:
+        "200":
+          description: Successfully read application list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+
+  /application/:
+    post:
+      operationId: application.create
+      tags:
+        - application
+      summary: Create an application and add it to the applications list
+      description: Create a new application in the applications list
+      requestBody:
+        $ref: "#/components/requestBodies/application.applicationDetails"
+        required: true
+      responses:
+        "201":
+          description: Successfully created an application
+
+  "/application/{id}":
+    get:
+      operationId: application.read_one
+      tags:
+        - application
+      summary: Read one application from the list
+      description: Read one application from the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the application to get from the list
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read an application from the list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+    put:
+      operationId: application.update
+      tags:
+        - application
+      summary: Update an application in the list
+      description: Update an application in the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the application to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: "#/components/requestBodies/application.applicationDetails"
+      responses:
+        "200":
+          description: Successfully updated an application
+    delete:
+      operationId: application.delete
+      tags:
+        - application
+      summary: Delete a application from the list
+      description: Delete a application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully deleted an application
+
+  "/application_meta/{activatorId}":
+    get:
+      operationId: application_meta.read_one
+      tags:
+        - application
+      summary: Read application_meta
+      description: Read application_meta
+      parameters:
+        - name: activatorId
+          in: path
+          description: activatorId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read application metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  length:
+                    type: integer
+
+  "/activator_meta/":
+    get:
+      operationId: activator_meta.read_one
+      tags:
+        - activator
+      summary: Read activator_meta
+      description: Read activator_meta
+      responses:
+        "200":
+          description: Successfully read activator metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  length:
+                    type: integer
+
+  /keyValues/team/:
+    get:
+      operationId: team.read_all
+      tags:
+        - team
+      summary: Read the entire list of teams
+      description: Read the list of teams
+      responses:
+        "200":
+          description: Successfully read team list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    key:
+                      type: string
+                      description: key
+                    value:
+                      type: string
+                      description: value
+    post:
+      operationId: team.create
+      tags:
+        - team
+      summary: Create a team and add it to the team list
+      description: Create a new team in the team list
+      requestBody:
+        $ref: '#/components/requestBodies/team.teamDetails'
+      responses:
+        "201":
+          description: Successfully created a team
+
+  "/keyValues/team/{key}":
+    get:
+      operationId: team.read_one
+      tags:
+        - team
+      summary: Read one team from the list
+      description: Read one team from the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the team to get from the list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully read a team from the list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+    put:
+      operationId: team.update
+      tags:
+        - team
+      summary: Update a team in the list
+      description: Update a team in the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the team to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/team.teamDetails"
+      responses:
+        "200":
+          description: Successfully updated a team
+
+    delete:
+      operationId: team.delete
+      tags:
+        - team
+      summary: Delete a team from the list
+      description: Delete a team
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted a team
+
+  /keyValues/environment/:
+    get:
+      operationId: environment.read_all
+      tags:
+        - environment
+      summary: Read the entire list of environments
+      description: Read the list of environments
+      responses:
+        "200":
+          description: Successfully read environments list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    key:
+                      type: string
+                      description: key
+                    value:
+                      type: string
+                      description: value
+    post:
+      operationId: environment.create
+      tags:
+        - environment
+      summary: Create an environment and add it to the environment list
+      description: Create a new environment in the environment list
+      requestBody:
+        $ref: '#/components/requestBodies/environment.environmentDetails'
+      responses:
+        "201":
+          description: Successfully created an environment
+
+  "/keyValues/environment/{key}":
+    get:
+      operationId: environment.read_one
+      tags:
+        - environment
+      summary: Read one environment from the list
+      description: Read one environment from the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the environment to get from the list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully read an environment from the list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+    put:
+      operationId: environment.update
+      tags:
+        - environment
+      summary: Update an environment in the list
+      description: Update an environment in the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the environment to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/environment.environmentDetails"
+      responses:
+        "200":
+          description: Successfully updated an environment
+    delete:
+      operationId: environment.delete
+      tags:
+        - environment
+      summary: Delete an environment from the list
+      description: Delete an environment
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted an environment
+  /keyValues/ci/:
+    get:
+      operationId: ci.read_all
+      tags:
+        - ci
+      summary: Read the entire list of CIs
+      description: Read the list of CIs
+      responses:
+        "200":
+          description: Successfully read CI list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    key:
+                      type: string
+                      description: key
+                    value:
+                      type: string
+                      description: value
+    post:
+      operationId: ci.create
+      tags:
+        - ci
+      summary: Create an ci and add it to the ci list
+      description: Create a new ci in the ci list
+      requestBody:
+        $ref: '#/components/requestBodies/ci.ciDetails'
+      responses:
+        "201":
+          description: Successfully created an ci
+  "/keyValues/ci/{key}":
+    get:
+      operationId: ci.read_one
+      tags:
+        - ci
+      summary: Read one ci from the list
+      description: Read one ci from the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the ci to get from the list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully read an ci from the list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+    put:
+      operationId: ci.update
+      tags:
+        - ci
+      summary: Update an ci in the list
+      description: Update an ci in the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the ci to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/ci.ciDetails"
+      responses:
+        "200":
+          description: Successfully updated an CI
+    delete:
+      operationId: ci.delete
+      tags:
+        - ci
+      summary: Delete an CI from the list
+      description: Delete an CI
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted an CI
+  /keyValues/cd/:
+    get:
+      operationId: cd.read_all
+      tags:
+        - cd
+      summary: Read the entire list of CDs
+      description: Read the list of CDs
+      responses:
+        "200":
+          description: Successfully read CD list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    key:
+                      type: string
+                      description: key
+                    value:
+                      type: string
+                      description: value
+    post:
+      operationId: cd.create
+      tags:
+        - cd
+      summary: Create a continuous deployment and add it to the continuous deployment list
+      description: Create a new continuous deployment in the continuous deployment list
+      requestBody:
+        $ref: '#/components/requestBodies/cd.cdDetails'
+      responses:
+        "201":
+          description: Successfully created an continuous deployment
+  "/keyValues/cd/{key}":
+    get:
+      operationId: cd.read_one
+      tags:
+        - cd
+      summary: Read one continuous deployment from the list
+      description: Read one continuous deployment from the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the continuous deployment to get from the list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully read an continuous deployment from the list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+    put:
+      operationId: cd.update
+      tags:
+        - cd
+      summary: Update an cd in the list
+      description: Update an cd in the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the cd to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/cd.cdDetails"
+      responses:
+        "200":
+          description: Successfully updated a continuous deployment 
+    delete:
+      operationId: cd.delete
+      tags:
+        - cd
+      summary: Delete a continuous deployment from the list
+      description: Delete a continuous deployment
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted a continuous deployment
+
+  /keyValues/sourceControl/:
+    get:
+      operationId: sourcecontrol.read_all
+      tags:
+        - sourcecontrol
+      summary: Read the entire list of source control types
+      description: Read the list of source control types
+      responses:
+        "200":
+          description: Successfully read source control type list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    key:
+                      type: string
+                      description: key
+                    value:
+                      type: string
+                      description: value
+    post:
+      operationId: sourcecontrol.create
+      tags:
+        - sourcecontrol
+      summary: Create an source control type and add it to the source control type list
+      description: Create a new soure control in the source control type list
+      requestBody:
+        $ref: '#/components/requestBodies/sourceControl.sourceControlDetails'
+      responses:
+        "201":
+          description: Successfully created a source control type
+
+  "/keyValues/sourceControl/{key}":
+    get:
+      operationId: sourcecontrol.read_one
+      tags:
+        - sourcecontrol
+      summary: Read one source control type from the list
+      description: Read one source control type from the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the source control to get from the list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully read an source control from the list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+    put:
+      operationId: sourcecontrol.update
+      tags:
+        - sourcecontrol
+      summary: Update a source control in the list
+      description: Update an source control in the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the source control to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/sourceControl.sourceControlDetails"
+      responses:
+        "200":
+          description: Successfully updated an source control
+    delete:
+      operationId: sourcecontrol.delete
+      tags:
+        - sourcecontrol
+      summary: Delete an source control from the list
+      description: Delete an source control
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted a source control
+
+  /keyValues/businessUnit/:
+    get:
+      operationId: businessUnit.read_all
+      tags:
+        - businessUnit
+      summary: Read the entire list of business units 
+      description: Read the list of business units
+      responses:
+        "200":
+          description: Successfully read business unit list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    key:
+                      type: string
+                      description: key
+                    value:
+                      type: string
+                      description: value
+
+    post:
+      operationId: businessUnit.create
+      tags:
+        - businessUnit
+      summary: Create an business unit and add it to the business unit list
+      description: Create a new business unit in the business unit list
+      requestBody:
+        $ref: "#/components/requestBodies/businessUnit.businessUnitDetails"
+        required: true
+      responses:
+        "201":
+          description: Successfully created an business unit
+
+  "/keyValues/businessUnit/{key}":
+    get:
+      operationId: businessUnit.read_one
+      tags:
+        - businessUnit
+      summary: Read one business unit from the list
+      description: Read one business unit from the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the business unit to get from the list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully read an business unit from the list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+    put:
+      operationId: businessUnit.update
+      tags:
+        - businessUnit
+      summary: Update an business unit in the list
+      description: Update an business unit in the list
+      parameters:
+        - name: key
+          in: path
+          description: key of the business unit to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/businessUnit.businessUnitDetails"
+      responses:
+        "200":
+          description: Successfully updated an business unit
+    delete:
+      operationId: businessUnit.delete
+      tags:
+        - businessUnit
+      summary: Delete an business unit from the list
+      description: Delete an business unit
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted an business unit
+
+  /solutions/:
+    get:
+      operationId: solution.read_all
+      tags:
+        - solution
+      summary: Read the entire list of solutions
+      description: Read the list of solutions
+      parameters:
+        - in: query
+          name: active
+          schema:
+            type: boolean
+        - in: query
+          name: namesonly
+          schema:
+            type: boolean
+        - in: query 
+          name: page
+          schema:
+            type: integer
+        - in: query 
+          name: page_size
+          schema:
+            type: integer
+        - in: query 
+          name: sort
+          schema:
+            type: array
+            items:
+              type: string
+          explode: true
+      responses:
+        "200":
+          description: Successfully read solutions list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Solution"
+
+  /solution/:
+    post:
+      operationId: solution.create
+      tags:
+        - solution
+      summary: Create a solution and add it to the solutions list
+      description: Create a new solution in the solutions list
+      requestBody:
+        $ref: "#/components/requestBodies/solution.solutionDetails"
+        description: solution to create
+      responses:
+        "201":
+          description: Successfully created a solution
+
+  "/solution/{id}":
+    get:
+      operationId: solution.read_one
+      tags:
+        - solution
+      summary: Read a single solution
+      description: Read a single solution
+      parameters:
+        - name: id
+          in: path
+          description: the id of the solution
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read a solution
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Solution"
+
+    delete:
+      operationId: solution.delete
+      tags:
+        - solution
+      summary: Delete a solution from the list
+      description: Delete a solution
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully deleted a solution
+
+  /activators/:
+    get:
+      operationId: activator.read_all
+      tags:
+        - activator
+      summary: Read the entire list of activators
+      description: Read the list of activators
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: environment
+          schema:
+            type: string
+        - in: query
+          name: platform
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: source
+          schema:
+            type: string
+        - in: query
+          name: sensitivity
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer 
+        - in: query
+          name: page_size
+          schema:
+            type: integer 
+        - in: query
+          name: sort
+          schema:
+            type: array
+            items:
+              type: string
+          explode: true
+      responses:
+        "200":
+          description: Successfully ran activator list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Activator"
+
+  /activator/:
+    post:
+      operationId: activator.create
+      tags:
+        - activator
+      summary: Create an activator and add it to the activator list
+      description: Create a new activator in the activator list
+      requestBody:
+        $ref: "#/components/requestBodies/activator.activatorDetails"
+      responses:
+        "201":
+          description: Successfully created an activator
+
+  "/activator/{id}":
+    get:
+      operationId: activator.read_one
+      tags:
+        - activator
+      summary: Read one activator from the list
+      description: Read one activator from the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the activator to get from the list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully read an activator from the list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Activator"
+    put:
+      operationId: activator.update
+      tags:
+        - activator
+      summary: Update an activator in the list
+      description: Update an activator in the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the activator to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: "#/components/requestBodies/activator.activatorDetails"
+      responses:
+        "200":
+          description: Successfully updated an activator
+
+    delete:
+      operationId: activator.delete
+      tags:
+        - activator
+      summary: Delete an activator from the list
+      description: Delete an activator
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted an activator
+
+  /setactivatorstatus/:
+    post:
+      operationId: activator.setActivatorStatus
+      tags:
+        - activator
+      summary: set activator status
+      description: set activator status
+      requestBody:
+        $ref: "#/components/requestBodies/activator.setActivatorStatusDetails"
+      responses:
+        "200":
+          description: Successfully updated an activator
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  status:
+                    type: string
+
+  /activatorcategories/:
+    get:
+      operationId: activator.categories
+      tags:
+        - activator
+      summary: Read the entire list of activator categories
+      description: Read the list of activator categories
+      responses:
+        "200":
+          description: Successfully retrieved a list of activator categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    category:
+                      type: string
+
+  /landingzoneprogressitems/:
+    get:
+      operationId: landingzoneprogressitem.read_all
+      tags:
+        - landingzoneprogressitem
+      summary: Read the entire list of landing zone progress items
+      description: Read the list of landing zone progress items
+      responses:
+        "200":
+          description: Successfully ran landing zone progress item list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LandingZoneProgressItem"
+
+  /landingzoneprogressitem/:
+    post:
+      operationId: landingzoneprogressitem.create
+      tags:
+        - landingzoneprogressitem
+      summary: Create a landing zone progress item and add it to the landing zone progress item list
+      description: Create a new new landing zone progress item in the landing zone progress item
+        list
+      requestBody:
+        $ref: '#/components/requestBodies/landingZoneProgressItem.landingZoneProgressItemDetails'
+      responses:
+        "200":
+          description: Successfully created a landing zone progress item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: id
+                  label:
+                    type: string
+                    description: label
+                  completed:
+                    type: boolean
+                    description: completed
+                    
+  "/landingzoneprogressitem/{id}":
+    get:
+      operationId: landingzoneprogressitem.read_one
+      tags:
+        - landingzoneprogressitem
+      summary: Read one landing zone progress item from the list
+      description: Read one landing zone progress item from the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the landing zone progress item to get from the list
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read an landing zone progress item from the list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  label:
+                    type: string
+                  completed:
+                    type: boolean
+    put:
+      operationId: landingzoneprogressitem.update
+      tags:
+        - landingzoneprogressitem
+      summary: Update an landing zone progress item in the list
+      description: Update an landing zone progress item in the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the landing zone progress item to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/landingZoneProgressItem.landingZoneProgressItemDetails'
+      responses:
+        "200":
+          description: Successfully updated an landing zone progress item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  label:
+                    type: string
+                  completed:
+                    type: boolean
+
+    delete:
+      operationId: landingzoneprogressitem.delete
+      tags:
+        - landingzoneprogressitem
+      summary: Delete a landing zone progress item from the list
+      description: Delete a landing zone progress item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted a landing zone progress item
+
+  /landingzoneactions/:
+    get:
+      operationId: landingzoneaction.read_all
+      tags:
+        - landingzoneaction
+      summary: Read the entire list of landing zone actions
+      description: Read the list of landing zone actions
+      responses:
+        "200":
+          description: Successfully ran landing zone action list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      description: id
+                    title:
+                      type: string
+                      description: title
+                    categoryName:
+                      type: string
+                      description: categoryName
+                    categoryClass:
+                      type: string
+                      description: categoryClass
+                    completionRate:
+                      type: integer
+                      description: completionRate
+                    locked:
+                      type: boolean
+                      description: locked
+                    routerLink:
+                      type: string
+                      description: routerLink
+
+  /landingzoneaction/:
+    post:
+      operationId: landingzoneaction.create
+      tags:
+        - landingzoneaction
+      summary: Create a landing zone action and add it to the landing zone action list
+      description: Create a new new landing zone action in the landing zone action list
+      requestBody:
+        $ref: "#/components/requestBodies/landingZoneAction.landingZoneActionDetails"
+      responses:
+        "200":
+          description: Successfully created a landing zone action
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LandingZoneAction"
+
+  "/landingzoneaction/{id}":
+    get:
+      operationId: landingzoneaction.read_one
+      tags:
+        - landingzoneaction
+      summary: Read one landing zone action from the list
+      description: Read one landing zone action from the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the landing zone action to get from the list
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read an landing zone action from the list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandingZoneAction"
+
+    put:
+      operationId: landingzoneaction.update
+      tags:
+        - landingzoneaction
+      summary: Update an landing zone action in the list
+      description: Update an landing zone action in the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the landing zone action to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: "#/components/requestBodies/landingZoneAction.landingZoneActionDetails"
+      responses:
+        "200":
+          description: Successfully updated a landing zone action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandingZoneAction"
+
+    delete:
+      operationId: landingzoneaction.delete
+      tags:
+        - landingzoneaction
+      summary: Delete a landing zone action from the list
+      description: Delete a landing zone action
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted a landing zone action
+
+  /landingzonewans/:
+    get:
+      operationId: landingzonewan.read_all
+      tags:
+        - landingzonewan
+      summary: Read the entire list of landing zone WANs
+      description: Read the list of landing zone WANs
+      responses:
+        "200":
+          description: Successfully ran landing zone WAN list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LandingZoneWAN"
+
+  /landingzonewan/:
+    post:
+      operationId: landingzonewan.create
+      tags:
+        - landingzonewan
+      summary: Create a landingzonewan and add it to the landing zone WAN list
+      description: Create a new new landingzonewan in the landing zone WAN list
+      requestBody:
+        $ref: "#/components/requestBodies/landingZoneWAN.landingZoneWANDetails"
+      responses:
+        "201":
+          description: Successfully created a landing zone WAN
+
+  "/landingzonewan/{id}":
+    get:
+      operationId: landingzonewan.read_one
+      tags:
+        - landingzonewan
+      summary: Read one landing zone WAN from the list
+      description: Read one landing zone WAN from the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the landing zone WAN to get from the list
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read an landing zone WAN from the list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandingZoneWAN"
+
+    put:
+      operationId: landingzonewan.update
+      tags:
+        - landingzonewan
+      summary: Update an landing zone WAN in the list
+      description: Update an landing zone WAN in the list
+      parameters:
+        - name: id
+          in: path
+          description: key of the landing zone WAN to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: "#/components/requestBodies/landingZoneWAN.landingZoneWANDetails"
+      responses:
+        "200":
+          description: Successfully updated a landing zone WAN
+
+    delete:
+      operationId: landingzonewan.delete
+      tags:
+        - landingzonewan
+      summary: Delete a landing zone WAN from the list
+      description: Delete a landing zone WAN
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted a landing zone WAN
+
+  /keyValues/bgproutingmode/:
+    get:
+      operationId: bgpRoutingMode.read_all
+      tags:
+        - bgproutingmode
+      summary: Read the entire list of BGPRoutingModes
+      description: Read the list of BGPRoutingModes
+      responses:
+        "200":
+          description: Successfully read BGPRoutingModes list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BGPRoutingMode"
+
+    post:
+      operationId: bgpRoutingMode.create
+      tags:
+        - bgproutingmode
+      summary: Create an BGPRoutingMode and add it to the BGPRoutingMode list
+      description: Create a new BGPRoutingMode in the BGPRoutingMode list
+      requestBody:
+        $ref: "#/components/requestBodies/bgpRoutingMode.bgpRoutingModeDetails"
+      responses:
+        "201":
+          description: Successfully created an bgpRoutingMode
+
+  "/keyValues/bgproutingmode/{id}":
+    get:
+      operationId: bgpRoutingMode.read_one
+      tags:
+        - bgproutingmode
+      summary: Read one bgproutingmode from the list
+      description: Read one bgproutingmode from the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the bgpRoutingMode to get from the list
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read a bgpRoutingMode from the list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BGPRoutingMode"
+
+    put:
+      operationId: bgpRoutingMode.update
+      tags:
+        - bgproutingmode
+      summary: Update an bgpRoutingMode in the list
+      description: Update an bgpRoutingMode in the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the bgpRoutingMode to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: "#/components/requestBodies/bgpRoutingMode.bgpRoutingModeDetails"
+      responses:
+        "200":
+          description: Successfully updated a bgproutingmode
+
+    delete:
+      operationId: bgpRoutingMode.delete
+      tags:
+        - bgproutingmode
+      summary: Delete an bgproutingmode from the list
+      description: Delete a bgproutingmode
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully deleted a bgproutingmode
+
+  /keyValues/subnetmode/:
+    get:
+      operationId: subnetMode.read_all
+      tags:
+        - subnetmode
+      summary: Read the entire list of SubnetModes
+      description: Read the list of SubnetModes
+      responses:
+        "200":
+          description: Successfully read SubnetModes list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubnetMode"
+
+    post:
+      operationId: subnetMode.create
+      tags:
+        - subnetmode
+      summary: Create an subnetMode and add it to the subnetMode list
+      description: Create a new subnetMode in the subnetMode list
+      requestBody:
+        $ref: "#/components/requestBodies/subnetMode.subnetModeDetails"
+      responses:
+        "201":
+          description: Successfully created an subnetMode
+
+  "/keyValues/subnetmode/{id}":
+    get:
+      operationId: subnetMode.read_one
+      tags:
+        - subnetmode
+      summary: Read one subnetmode from the list
+      description: Read one subnetmode from the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the subnetMode to get from the list
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read a subnetMode from the list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubnetMode"
+
+    put:
+      operationId: subnetMode.update
+      tags:
+        - subnetmode
+      summary: Update an subnetMode in the list
+      description: Update an subnetMode in the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the subnetMode to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: "#/components/requestBodies/subnetMode.subnetModeDetails"
+      responses:
+        "200":
+          description: Successfully updated a subnetmode
+
+    delete:
+      operationId: subnetMode.delete
+      tags:
+        - subnetmode
+      summary: Delete an subnetmode from the list
+      description: Delete a subnetmode
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully deleted a subnetmode
+
+  /keyValues/vpnonpremisevendor/:
+    get:
+      operationId: vpnOnPremiseVendor.read_all
+      tags:
+        - vpnonpremisevendor
+      summary: Read the entire list of vpnOnPremiseVendors
+      description: Read the list of vpnOnPremiseVendors
+      responses:
+        "200":
+          description: Successfully read vpnOnPremiseVendor list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VPNOnPremiseVendor"
+
+    post:
+      operationId: vpnOnPremiseVendor.create
+      tags:
+        - vpnonpremisevendor
+      summary: Create an vpnOnPremiseVendor and add it to the vpnOnPremiseVendor list
+      description: Create a new vpnOnPremiseVendor in the vpnOnPremiseVendor list
+      requestBody:
+        $ref: "#/components/requestBodies/vpnOnPremiseVendor.vpnOnPremiseVendorDetails"
+        description: vpnOnPremiseVendor to create
+        required: true
+      responses:
+        "201":
+          description: Successfully created an VPNOnPremiseVendor
+
+  "/keyValues/vpnonpremisevendor/{id}":
+    get:
+      operationId: vpnOnPremiseVendor.read_one
+      tags:
+        - vpnonpremisevendor
+      summary: Read one vpnOnPremiseVendor from the list
+      description: Read one vpnOnPremiseVendor from the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the vpnOnPremiseVendor to get from the list
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully read a vpnOnPremiseVendor from the list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VPNOnPremiseVendor"
+
+    put:
+      operationId: vpnOnPremiseVendor.update
+      tags:
+        - vpnonpremisevendor
+      summary: Update an vpnOnPremiseVendor in the list
+      description: Update an vpnOnPremiseVendor in the list
+      parameters:
+        - name: id
+          in: path
+          description: id of the vpnOnPremiseVendor to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: "#/components/requestBodies/vpnOnPremiseVendor.vpnOnPremiseVendorDetails"
+      responses:
+        "200":
+          description: Successfully updated a vpnOnPremiseVendor
+
+    delete:
+      operationId: vpnOnPremiseVendor.delete
+      tags:
+        - vpnonpremisevendor
+      summary: Delete an VPNOnPremiseVendor from the list
+      description: Delete a vpnOnPremiseVendor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully deleted a vpnOnPremiseVendor
+
+servers:
+  - url: /api
+
+components:
+
+  requestBodies:
+    application.applicationDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: applicationDetails
+            $ref: "#/components/schemas/Application"
+      description: The application to create
+      required: true
+
+    activator.activatorDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: activatorDetails
+            $ref: "#/components/schemas/Activator"
+      description: activator to create
+      required: true
+
+    activator.setActivatorStatusDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: activatorDetails
+            type: object
+            properties:
+              id:
+                type: integer
+              status:
+                type: string
+              accessRequestedBy:
+                type: integer
+      required: true
+
+    businessUnit.businessUnitDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: businessUnitDetails
+            $ref: "#/components/schemas/BusinessUnit"
+      description: BusinessUnit to create
+      required: true
+
+    ci.ciDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: ciDetails
+            $ref: "#/components/schemas/CI"
+      description: CI to create
+      required: true
+
+    cd.cdDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: cdDetails
+            $ref: "#/components/schemas/CI"
+      description: CD to create
+      required: true
+      
+    sourceControl.sourceControlDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: sourceControlDetails
+            $ref: "#/components/schemas/SourceControl"
+      description: SourceControl to create
+      required: true
+      
+    landingZoneAction.landingZoneActionDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: landingZoneActionDetails
+            $ref: "#/components/schemas/LandingZoneAction"
+      description: landingzoneaction to create
+      required: true
+
+    landingZoneProgressItem.landingZoneProgressItemDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: landingZoneProgressItemDetails
+            $ref: "#/components/schemas/LandingZoneProgressItem"
+      description: landingzonewan to create
+      required: true
+
+    landingZoneWAN.landingZoneWANDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: landingZoneWANDetails
+            $ref: "#/components/schemas/LandingZoneWAN"
+      description: landingzonewan to create
+      required: true
+
+    bgpRoutingMode.bgpRoutingModeDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: bgpRoutingModeDetails
+            $ref: "#/components/schemas/BGPRoutingMode"
+      description: bgpRoutingMode to create
+      required: true
+
+    subnetMode.subnetModeDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: subnetModeDetails
+            $ref: "#/components/schemas/SubnetMode"
+      description: subnetMode to create
+      required: true
+
+    vpnOnPremiseVendor.vpnOnPremiseVendorDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: vpnOnPremiseVendorDetails
+            $ref: "#/components/schemas/VPNOnPremiseVendor"
+      description: vpnOnPremiseVendor to create
+      required: true
+
+    team.teamDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: teamDetails
+            $ref: "#/components/schemas/Team"
+      description: teamDetails to create
+      required: true
+
+    environment.environmentDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: environmentDetails
+            $ref: "#/components/schemas/Environment"
+      description: environment to create
+      required: true
+
+    login.loginDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: login_details
+            $ref: "#/components/schemas/User"
+      description: login details
+      required: true
+
+    solution.solutionDetails:
+      content:
+        application/json:
+          schema:
+            x-body-name: solutionDetails
+            type: object
+            properties:
+              name:
+                type: string
+                description: name
+              description:
+                type: string
+                description: description
+              businessUnit:
+                type: string
+                description: businessUnit
+              costCentre:
+                type: string
+                description: costCentre
+              ci:
+                type: string
+                description: ci
+              cd:
+                type: string
+                description: cd
+              sourceControl:
+                type: string
+                description: sourceControl
+              environments:
+                type: array
+                description: environment
+                items: {}
+              active:
+                type: boolean
+                description: active
+              favourite:
+                type: boolean
+                description: favourite
+              teams:
+                type: integer
+                description: teams
+              lastUpdated:
+                type: string
+                description: "UTC/CUT last updated datetime stamp see: https://github.com/tranquilitybase-io/tb-houston-service/wiki/UTC-Timestamp"
+      required: true
+
+  schemas:
+    Activator:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        name:
+          type: string
+          description: name
+        type:
+          type: string
+          description: type
+        available:
+          type: boolean
+          description: available
+        sensitivity:
+          type: string
+          description: sensitivity
+        category:
+          type: string
+          description: category
+        envs:
+          type: array
+          description: envs
+          items:
+            properties:
+              env:
+                type: string
+                description: env
+        platforms:
+          type: array
+          description: platforms
+          items:
+            properties:
+              platform:
+                type: string
+                description: platform
+        lastUpdated:
+          type: string
+          description: "UTC/CUT last updated datetime stamp see: https://github.com/tranquilitybase-io/tb-houston-service/wiki/UTC-Timestamp"
+        userCapacity:
+          type: integer
+          description: userCapacity
+        serverCapacity:
+          type: integer
+          description: serverCapacity
+        regions:
+          type: array
+          description: regions
+          items:
+            properties:
+              region:
+                type: string
+                description: region
+        hosting:
+          type: array
+          description: hosting
+          items:
+            properties:
+              host:
+                type: string
+                description: host
+        apiManagement:
+          type: array
+          description: apiManagement
+          items:
+            properties:
+              api:
+                type: string
+                description: api
+        ci:
+          type: array
+          description: ci
+          items:
+            properties:
+              aci:
+                type: string
+                description: aci
+        cd:
+          type: array
+          description: cd
+          items:
+            properties:
+              acd:
+                type: string
+                description: acd
+        sourceControl:
+          type: array
+          description: sourceControl
+          items:
+            properties:
+              sc:
+                type: string
+                description: sc
+        businessUnit:
+          type: string
+          description: businessUnit
+        technologyOwner:
+          type: string
+          description: technologyOwner
+        technologyOwnerEmail:
+          type: string
+          description: technologyOwnerEmail
+        billing:
+          type: string
+          description: billing
+        activator:
+          type: string
+          description: activator
+        resources:
+          type: array
+          description: resources
+          items:
+            properties:
+              ipaddress:
+                type: string
+                description: ipaddress
+              name:
+                type: string
+                description: name
+        status:
+          type: string
+          description: status
+        description:
+          type: string
+          description: description
+        accessRequestedBy:
+          type: integer
+          description: accessRequestedBy
+        source:
+          type: string
+          description: source
+        activatorLink:
+          type: string
+          description: activatorLink
+
+    Application:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        solutionId:
+          type: integer
+          description: solutionId
+        activatorId:
+          type: integer
+          description: activatorId
+        name:
+          type: string
+          description: application
+        env:
+          type: string
+          description: env
+        status:
+          type: string
+          description: status
+        description:
+          type: string
+          description: notes
+
+    Team:
+      type: object
+      properties:
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    BGPRoutingMode:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    BusinessUnit:
+      type: object
+      properties:
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    Environment:
+      type: object
+      properties:
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    LandingZoneAction:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        title:
+          type: string
+          description: title
+        categoryName:
+          type: string
+          description: categoryName
+        categoryClass:
+          type: string
+          description: categoryClass
+        completionRate:
+          type: integer
+          description: completionRate
+        locked:
+          type: boolean
+          description: locked
+        routerLink:
+          type: string
+          description: routerLink
+
+    LandingZoneProgressItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        label:
+          type: string
+          description: label
+        completed:
+          type: boolean
+          description: completed
+
+    CI:
+      type: object
+      properties:
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    CD:
+      type: object
+      properties:
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    SourceControl:
+      type: object
+      properties:
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    SubnetMode:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    VPNOnPremiseVendor:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        key:
+          type: string
+          description: key
+        value:
+          type: string
+          description: value
+
+    LandingZoneWAN:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id
+        googleSession:
+          type: object
+          properties:
+            primaryGcpVpcSubnet:
+              type: string
+            primaryRegion:
+              type: string
+            primarySubnetName:
+              type: string
+            secondaryGcpVpcSubnet:
+              type: string
+            secondaryRegion:
+              type: string
+            secondarySubnetName:
+              type: string
+        onPremiseSession:
+          type: object
+          properties:
+            primaryBgpPeer:
+              type: string
+            primaryPeerIp:
+              type: string
+            primaryPeerIpSubnet:
+              type: string
+            primarySharedSecret:
+              type: string
+            primaryVpnTunnel:
+              type: string
+            secondaryBgpPeer:
+              type: string
+            secondaryPeerIp:
+              type: string
+            secondaryPeerIpSubnet:
+              type: string
+            secondarySharedSecret:
+              type: string
+            secondaryVpnTunnel:
+              type: string
+            vendor:
+              type: string
+        vpn:
+          type: object
+          properties:
+            bgpInterfaceNetLength:
+              type: string
+            bgpRoutingMode:
+              type: string
+            cloudRouterName:
+              type: string
+            description:
+              type: string
+            externalVpnGateway:
+              type: string
+            googleASN:
+              type: integer
+            haVpnGateway:
+              type: string
+            peerASN:
+              type: integer
+            projectName:
+              type: string
+            subnetMode:
+              type: string
+            vpcName:
+              type: string
+
+    Solution:
+      type: object
+      properties:
+        solutionId:
+          type: integer
+          description: solutionId
+        name:
+          type: string
+          description: name
+        description:
+          type: string
+          description: description
+        businessUnit:
+          type: string
+          description: businessUnit
+        costCentre:
+          type: string
+          description: costCentre
+        ci:
+          type: string
+          description: ci
+        cd:
+          type: string
+          description: cd
+        sourceControl:
+          type: string
+          description: sourceControl
+        environments:
+          type: array
+          description: environments
+          items: {}
+        active:
+          type: boolean
+          description: active
+        favourite:
+          type: boolean
+          description: favourite
+        teams:
+          type: integer
+          description: teams
+        lastUpdated:
+          type: string
+          description: "UTC/CUT last updated datetime stamp see: https://github.com/tranquilitybase-io/tb-houston-service/wiki/UTC-Timestamp"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id
+        email:
+          type: string
+          description: email
+        firstName:
+          type: string
+          description: The user's first name
+        lastName:
+          type: string
+          description: The user's last name
+        password:
+          type: string
+          description: Encrypted password
+        isAdmin:
+          type: boolean
+          description: Is the user an administrator?
+
