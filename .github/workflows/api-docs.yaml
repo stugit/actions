@@ -34,6 +34,7 @@ jobs:
         git config user.email git.action@example.com
         git config user.name "example"
         chmod 777 redoc-static.html
+        # check if file changed
         if ! git diff --no-ext-diff --quiet --exit-code; then
           git add redoc-static.html
           git commit -m "Add automatically generated openapi static HTML documentation" 
