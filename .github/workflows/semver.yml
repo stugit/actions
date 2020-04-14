@@ -30,7 +30,6 @@ jobs:
       run: |
         git config user.email git.action@example.com
         git config user.name "example"
-        chmod 777 
         # check if file changed
         if ! git diff --no-ext-diff --quiet --exit-code; then
           git add date.txt
