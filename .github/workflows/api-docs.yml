@@ -17,10 +17,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Debug
+      shell: bash
+      run: |
+        echo "github.repository"
+        echo ${{ github.repository }}
     - uses: actions/checkout@v2
       with:
         repository: stugit/actions
         path: .
+        fetch-depth: 0
     - name: Install redoc-cli and generate API docs
       shell: bash
       run: |
