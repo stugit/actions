@@ -8,11 +8,6 @@ name: api-docs
 on:
   push
 
-#  push:
-#    branches: 
-#      - '*'
-#      - '!master'
-
 jobs:
   build:
 
