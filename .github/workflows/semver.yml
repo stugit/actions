@@ -49,6 +49,7 @@ jobs:
           echo "Error: version in environment is not set." 1>&2
           exit 1
         fi
+        cat version.json
     - name: git add, commit and push
       shell: bash
       run: |
@@ -58,6 +59,8 @@ jobs:
         if ! git diff --no-ext-diff --quiet --exit-code; then
           git add version.json
           git commit -m "Add version.json"
+        else
+          echo "version.json has not changed."
         fi
     - name: Push changes
       uses: ad-m/github-push-action@master
