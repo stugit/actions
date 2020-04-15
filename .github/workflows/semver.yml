@@ -5,10 +5,7 @@ name: semver
 #name: Houston Service - semver workflow
 
 on:
-  push:
-    branches: 
-      - '*'
-      - '!master'
+  push
 
 jobs:
   build:
@@ -16,29 +13,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: stugit/actions
-        path: .
-    - name: run semver
-      shell: bash
-      run: |
-        chmod +x scripts/date.sh
-        sudo scripts/date.sh > date.txt
-    - name: git add, commit and push
-      shell: bash
-      run: |
-        git config user.email git.action@example.com
-        git config user.name "example"
-        # check if file changed
-        if ! git diff --no-ext-diff --quiet --exit-code; then
-          git add date.txt
-          git commit -m "Add date.txt" 
-        fi
     - name: Extract current branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
+    - name: Echo Branch Name
+      shell: bash
+      run: |
+        echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+    - uses: actions/checkout@v2
+      with:
+        #repository: tranquilitybase-io/tb-houston-service
+        repository: karwootang-gft/tb-houston-service
+        path: .
+        fetch-depth: 0
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: run semver, store in step variable version
+      shell: bash
+      run: |
+        echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
+      id: get_version
+    - name: check if version variable is set
+      shell: bash
+      run: |
+        if [[ -z ${{ steps.get_version.outputs.version }} ]]; then
+          echo "Error: version in environment is not set." 1>&2
+          exit 1
+        fi
+    - name: git add, commit and push
+      shell: bash
+      run: |
+        git config user.email git.action@gft.com
+        git config user.name "git.action"
+        # check if file changed
+        if ! git diff --no-ext-diff --quiet --exit-code; then
+          git add version.json
+          git commit -m "Add version.json"
+        fi
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
