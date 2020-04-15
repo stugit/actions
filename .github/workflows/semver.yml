@@ -24,7 +24,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         #repository: tranquilitybase-io/tb-houston-service
-        repository: karwootang-gft/tb-houston-service
+        #repository: karwootang-gft/tb-houston-service
+        repository: stugit/actions
         path: .
         fetch-depth: 0
     - name: Set up Python 3.6
@@ -38,6 +39,7 @@ jobs:
     - name: run semver, store in step variable version
       shell: bash
       run: |
+        ls -alrt
         echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
       id: get_version
     - name: check if version variable is set
@@ -47,16 +49,14 @@ jobs:
           echo "Error: version in environment is not set." 1>&2
           exit 1
         fi
+        cat version.json
     - name: git add, commit and push
       shell: bash
       run: |
         git config user.email git.action@gft.com
         git config user.name "git.action"
-        # check if file changed
-        if ! git diff --no-ext-diff --quiet --exit-code; then
-          git add version.json
-          git commit -m "Add version.json"
-        fi
+        git add version.json
+        git commit -m "Add version.json"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
