@@ -55,14 +55,8 @@ jobs:
       run: |
         git config user.email git.action@gft.com
         git config user.name "git.action"
-        # check if file changed
-        git diff
-        if ! git diff --no-ext-diff --quiet --exit-code; then
-          git add version.json
-          git commit -m "Add version.json"
-        else
-          echo "version.json has not changed."
-        fi
+        git add version.json
+        git commit -m "Add version.json"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
