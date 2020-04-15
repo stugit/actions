@@ -24,7 +24,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         #repository: tranquilitybase-io/tb-houston-service
-        repository: karwootang-gft/tb-houston-service
+        #repository: karwootang-gft/tb-houston-service
+        repository: stugit/actions
         path: .
         fetch-depth: 0
     - name: Set up Python 3.6
