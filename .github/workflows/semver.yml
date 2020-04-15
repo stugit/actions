@@ -5,7 +5,8 @@ name: semver
 #name: Houston Service - semver workflow
 
 on:
-  push
+  pull_request
+#  push
 
 jobs:
   build:
