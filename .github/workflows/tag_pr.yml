@@ -39,7 +39,7 @@ jobs:
     - name: retrieve current version
       shell: bash
       run: |
-        echo "##[set-output name=version;]$(python scripts/get_semver.py"
+        echo "##[set-output name=version;]$(python scripts/get_semver.py)"
       id: get_version
     - name: check if version variable is set
       shell: bash
@@ -55,3 +55,9 @@ jobs:
         git config user.email git.action@gft.com
         git config user.name "git.action"
         git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ steps.get_version_outputs.version }}"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: ${{ steps.extract_branch.outputs.branch }}
+        force: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
