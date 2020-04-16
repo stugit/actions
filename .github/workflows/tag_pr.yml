@@ -39,7 +39,7 @@ jobs:
     - name: retrieve current version
       shell: bash
       run: |
-        echo "##[set-output name=version;]$(python scripts/get_semver.py"
+        echo "##[set-output name=version;]$(python scripts/get_semver.py)"
       id: get_version
     - name: check if version variable is set
       shell: bash
