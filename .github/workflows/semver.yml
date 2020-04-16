@@ -21,6 +21,10 @@ jobs:
       shell: bash
       run: |
         echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+        if [[ ${{ steps.extract_branch.outputs.branch }}  == "master" ]]; then
+          echo "Exiting, no need to run semver logic when merging to master."
+          exit 0
+        fi
     - uses: actions/checkout@v2
       with:
         #repository: tranquilitybase-io/tb-houston-service
