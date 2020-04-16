@@ -36,11 +36,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: run semver, store in step variable version
+    - name: retrieve current version
       shell: bash
       run: |
-        ls -alrt
-        echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
+        echo "##[set-output name=version;]$(python scripts/get_semver.py"
       id: get_version
     - name: check if version variable is set
       shell: bash
@@ -49,10 +48,10 @@ jobs:
           echo "Error: version in environment is not set." 1>&2
           exit 1
         fi
-        cat version.json
+        echo "${{ steps.get_version.outputs.version }}"
     - name: git tag
       shell: bash
       run: |
         git config user.email git.action@gft.com
         git config user.name "git.action"
-        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging"
+        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ step.get_version_outputs.version }}"
