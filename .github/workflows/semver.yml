@@ -57,6 +57,7 @@ jobs:
         git config user.name "git.action"
         git add version.json
         git commit -m "Add version.json"
+        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ steps.get_version_outputs.version }}"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
