@@ -54,4 +54,4 @@ jobs:
       run: |
         git config user.email git.action@gft.com
         git config user.name "git.action"
-        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ step.get_version_outputs.version }}"
+        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ steps.get_version_outputs.version }}"
