@@ -1,11 +1,11 @@
 # This workflow will run semver.pl and update the versions.json file in the root folder.
 # The version.jsonfile is then added, commited and pushed to the current branch.
 
-name: semver
-#name: Houston Service - semver workflow
+name: tag_pr
+#name: Houston Service - tag_pr workflow
 
 on:
-  push
+  pull_request
 
 jobs:
   build:
@@ -36,11 +36,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: run semver, store in step variable version
+    - name: retrieve current version
       shell: bash
       run: |
-        ls -alrt
-        echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
+        echo "##[set-output name=version;]$(python scripts/get_semver.py"
       id: get_version
     - name: check if version variable is set
       shell: bash
@@ -49,19 +48,10 @@ jobs:
           echo "Error: version in environment is not set." 1>&2
           exit 1
         fi
-        cat version.json
-    - name: git add, commit and push
+        echo "${{ steps.get_version.outputs.version }}"
+    - name: git tag
       shell: bash
       run: |
         git config user.email git.action@gft.com
         git config user.name "git.action"
-        git add version.json
-        git commit -m "Add version.json"
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        branch: ${{ steps.extract_branch.outputs.branch }}
-        force: true
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Tag the commit
-      git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging"
+        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ step.get_version_outputs.version }}"
