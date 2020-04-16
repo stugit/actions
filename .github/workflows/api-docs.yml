@@ -6,7 +6,8 @@ name: api-docs
 #name: Houston Service - API documentation workflow
 
 on:
-  push
+  push:
+    branches-ignore: [ master ]
 
 jobs:
   build:
