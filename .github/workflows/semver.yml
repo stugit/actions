@@ -32,7 +32,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: stugit/actions
-        path: .
+        path: actions
         fetch-depth: 0
     - name: Set up Python 3.6
       uses: actions/setup-python@v1
@@ -42,10 +42,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+      working-directory: "${GITHUB_WORKSPACE}/actions"
     - name: run semver, store in step variable version
       shell: bash
       run: |
-        echo "##[set-output name=commit_count;]$(git rev-list --count --no-merges master..)"
+        cd "${GITHUB_WORKSPACE}/actions"
+        echo "##[set-output name=commit_count;]$( git rev-list --count --no-merges master.. )"
         echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.branch.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
       id: semver
     - name: check if version variable is set
