@@ -69,7 +69,11 @@ class Semver():
             release_type = "major"
         else:
             release_type = "patch"
-        return self.get_next_version(release_type)
+
+        if commit_count > 0:
+            return self.get_next_version("patch")
+        else:
+            return self.get_next_version(release_type)
 
     def as_string(self):
         return "{0}.{1}.{2}".format(
