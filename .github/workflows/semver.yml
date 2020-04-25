@@ -25,7 +25,12 @@ jobs:
         echo Branch name: ${{ steps.extract_branch.outputs.branch }}
     - name: Echo environment
       shell: bash
-      run: env
+      run: |
+        env
+        echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+        echo "GITHUB_EVENT_PATH"
+        cat "${GITHUB_EVENT_PATH}"
+        
     - uses: actions/checkout@v2
       with:
         #repository: tranquilitybase-io/tb-houston-service
