@@ -6,6 +6,8 @@ name: semver
 
 on:
   push:
+    branch-excludes: [ master ]
+
 
 jobs:
   build:
@@ -39,18 +41,16 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.6
-    - name: Install dependencies
-      run: |
-        cd "${GITHUB_WORKSPACE}/actions"
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+#    - name: Install dependencies
+#      run: |
+#        cd "${GITHUB_WORKSPACE}/actions"
+#        python -m pip install --upgrade pip
+#        pip install -r requirements.txt
     - name: run semver, store in step variable version
       shell: bash
       run: |
         cd "${GITHUB_WORKSPACE}/actions"
-        git checkout  ${{ steps.extract_branch.outputs.branch }}
-        echo "##[set-output name=commit_count;]$( git rev-list --count --no-merges 'master..' )"
-        echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.branch.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
+        echo "##[set-output name=version;]$(python scripts/semver.py --patch }} )"
       id: semver
 #    - name: Setup tmate session
 #      uses: mxschmitt/action-tmate@v2

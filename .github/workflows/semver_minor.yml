@@ -6,6 +6,7 @@ name: semver
 
 on:
   create
+  pull_request: [ master ]
 
 jobs:
   build:
@@ -32,14 +33,14 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.6
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+#    - name: Install dependencies
+#      run: |
+#        python -m pip install --upgrade pip
+#        pip install -r requirements.txt
     - name: run semver, store in step variable version
       shell: bash
       run: |
-        echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
+        echo "##[set-output name=version;]$(python scripts/semver.py --minor )"
       id: get_version
     - name: check if version variable is set
       shell: bash
@@ -63,3 +64,4 @@ jobs:
         branch: ${{ steps.extract_branch.outputs.branch }}
         force: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: /home/runner/work/actions/actions
