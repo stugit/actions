@@ -18,7 +18,6 @@ jobs:
       shell: bash
       run: |
         echo Branch name: ${{ steps.extract_branch.outputs.branch }}
-
   
 on:
   push:
