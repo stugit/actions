@@ -13,11 +13,12 @@ jobs:
     steps:
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+      id: extract_branch2
     - name: Echo Branch Name
       shell: bash
       run: |
-        echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+        echo Branch name: ${{ steps.extract_branch2.outputs.branch }}
+        env
   
 on:
   push:
