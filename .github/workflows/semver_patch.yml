@@ -22,7 +22,7 @@ jobs:
     - name: Echo Branch Name
       shell: bash
       run: |
-        echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+        echo Branch name: ${{ steps.branch.outputs.branch }}
     - name: Echo environment
       shell: bash
       run: |
@@ -75,7 +75,7 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        branch: ${{ steps.server.outputs.branch }}
+        branch: ${{ steps.branch.outputs.branch }}
         force: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
         directory: /home/runner/work/actions/actions
