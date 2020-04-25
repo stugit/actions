@@ -5,6 +5,23 @@ name: semver
 #name: Houston Service - semver workflow
 
 on:
+  create
+    branches-ignore: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Echo Branch Name
+      shell: bash
+      run: |
+        echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+
+  
+on:
   push:
     branches-ignore: [ master ]
 
