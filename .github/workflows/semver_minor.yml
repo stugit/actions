@@ -6,9 +6,9 @@ name: semver minor
 
 on:
   create:
-    branches_exclude: [ master ]
+    branches_ignore: [ master ]
   pull_request:
-    branches_exclude: [ master ]
+    branches_ignore: [ master ]
 
 jobs:
   build:
