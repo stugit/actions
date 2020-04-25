@@ -6,7 +6,6 @@ name: semver
 
 on:
   create
-    branches-ignore: [ master ]
 
 jobs:
   build:
