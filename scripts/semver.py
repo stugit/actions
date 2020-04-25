@@ -57,7 +57,7 @@ class Semver():
             print("IO error, don't know how to deal with this!")
             exit(1)
 
-    def get_next_version_from_branch(self, branch="patch/dummy", commit_count=0):
+    def get_next_version_from_branch(self, branch="patch/dummy"):
         release_type = "minor"
         if branch.startswith("feature/"):
             release_type = "minor"
@@ -70,10 +70,7 @@ class Semver():
         else:
             release_type = "patch"
 
-        if commit_count > 0:
-            return self.get_next_version("patch")
-        else:
-            return self.get_next_version(release_type)
+        return self.get_next_version(release_type)
 
     def as_string(self):
         return "{0}.{1}.{2}".format(
@@ -87,9 +84,12 @@ if __name__ == "__main__":
     ap.add_argument('-b', '--branch_name', metavar='<branch_name>', 
         type=str, required=True, 
         help="The branch name.")
-    ap.add_argument('-c', '--commit_count', metavar='<commit_count>', 
-        type=int, required=False, default=0,
-        help="Number of commit in the current branch.") 
+    ap.add_argument('-p', '--patch', action='store_true', default=False, 
+        help="Increment the patch number.") 
+    ap.add_argument('-m', '--minor', action='store_true', default=False, 
+        help="Increment the minor number.") 
+    ap.add_argument('-M', '--Major', action='store_true', default=False, 
+        help="Increment the Major number.") 
     args = ap.parse_args()
     #print(f"Using branch: {args.branch_name}")
     #print(f"Number of commits: {args.commit_count}")
@@ -97,6 +97,13 @@ if __name__ == "__main__":
     #print(f"commit: {args.commit}")
 
     sv = Semver("version.json")
-    v = sv.get_next_version_from_branch(branch=args.branch_name, commit_count=args.commit_count)
+    if args.patch:
+    	v = sv.get_next_version("patch")
+    elif args.minor:
+    	v = sv.get_next_version("minor")
+    elif args.Major:
+    	v = sv.get_next_version("major")
+    else:
+    	v = sv.get_next_version_from_branch(branch=args.branch_name)
     sv.commit()
     print("{0}".format(sv.as_string()))
