@@ -22,12 +22,7 @@ jobs:
     - name: Echo Branch Name
       shell: bash
       run: |
-        echo Branch name: ${{ steps.extract_branch.outputs.branch }}
-    - uses: actions/checkout@v2
-      with:
-        repository: tranquilitybase-io/TranquilityBase
-        path: TranquilityBase
-        fetch-depth: 0        
+        echo Branch name: ${{ steps.extract_branch.outputs.branch }} 
     - uses: actions/checkout@v2
       with:
         repository: stugit/actions
@@ -45,7 +40,7 @@ jobs:
       shell: bash
       run: |
         ls -alrt
-        echo "##[set-output name=version;]$(python ${GITHUB_WORKSPACE}/TranquilityBase/scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
+        echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
       id: get_version
     - name: check if version variable is set
       shell: bash
