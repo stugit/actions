@@ -26,6 +26,7 @@ jobs:
       run: |
         env
         echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+        echo "${GITHUB_WORKSPACE}"
         echo "GITHUB_EVENT_PATH"
         cat "${GITHUB_EVENT_PATH}"
 
@@ -40,16 +41,19 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
+        cd "${GITHUB_WORKSPACE}/actions"
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-      working-directory: "${GITHUB_WORKSPACE}/actions"
     - name: run semver, store in step variable version
       shell: bash
       run: |
         cd "${GITHUB_WORKSPACE}/actions"
-        echo "##[set-output name=commit_count;]$( git rev-list --count --no-merges master.. )"
+        git checkout  ${{ steps.extract_branch.outputs.branch }}
+        echo "##[set-output name=commit_count;]$( git rev-list --count --no-merges 'master..' )"
         echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.branch.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
       id: semver
+#    - name: Setup tmate session
+#      uses: mxschmitt/action-tmate@v2
     - name: check if version variable is set
       shell: bash
       run: |
@@ -61,6 +65,7 @@ jobs:
     - name: git add, commit and push
       shell: bash
       run: |
+        cd "${GITHUB_WORKSPACE}/actions"
         git config user.email git.action@gft.com
         git config user.name "git.action"
         git add version.json
@@ -72,3 +77,4 @@ jobs:
         branch: ${{ steps.server.outputs.branch }}
         force: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: /home/runner/work/actions/actions
