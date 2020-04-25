@@ -40,9 +40,9 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        cd "${GITHUB_WORKSPACE}/actions"
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+      working-directory: "${GITHUB_WORKSPACE}/actions"
     - name: run semver, store in step variable version
       shell: bash
       run: |
