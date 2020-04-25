@@ -60,6 +60,7 @@ jobs:
         git add version.json
         git commit -m "Add version.json"
         git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ steps.get_version_outputs.version }}"
+        git pull
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
