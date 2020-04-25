@@ -5,8 +5,10 @@ name: semver
 #name: Houston Service - semver workflow
 
 on:
-  create
-  pull_request: [ master ]
+  create:
+    branches_exclude: [ master ]
+  pull_request:
+    branches_exclude: [ master ]
 
 jobs:
   build:
