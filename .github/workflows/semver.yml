@@ -5,22 +5,6 @@ name: semver
 #name: Houston Service - semver workflow
 
 on:
-  create
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch2
-    - name: Echo Branch Name
-      shell: bash
-      run: |
-        echo Branch name: ${{ steps.extract_branch2.outputs.branch }}
-        env
-  
-on:
   push:
     branches-ignore: [ master ]
 
@@ -39,6 +23,9 @@ jobs:
       shell: bash
       run: |
         echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+    - name: Echo environment
+      shell: bash
+      run: env
     - uses: actions/checkout@v2
       with:
         #repository: tranquilitybase-io/tb-houston-service
