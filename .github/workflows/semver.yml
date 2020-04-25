@@ -16,7 +16,7 @@ jobs:
     - name: Extract current branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: semver
+      id: branch
     - name: Echo Branch Name
       shell: bash
       run: |
@@ -38,7 +38,7 @@ jobs:
       shell: bash
       run: |
         echo "##[set-output name=commit_count;]$(git rev-list --count --no-merges master..)"
-        echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.semver.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
+        echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.branch.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
       id: semver
     - name: check if version variable is set
       shell: bash
