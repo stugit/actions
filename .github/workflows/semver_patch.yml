@@ -5,7 +5,9 @@ name: semver
 #name: Houston Service - semver workflow
 
 on:
-  create
+  push:
+    branch-excludes: [ master ]
+
 
 jobs:
   build:
@@ -16,35 +18,46 @@ jobs:
     - name: Extract current branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+      id: branch
     - name: Echo Branch Name
       shell: bash
       run: |
         echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+    - name: Echo environment
+      shell: bash
+      run: |
+        env
+        echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+        echo "${GITHUB_WORKSPACE}"
+        echo "GITHUB_EVENT_PATH"
+        cat "${GITHUB_EVENT_PATH}"
+
     - uses: actions/checkout@v2
       with:
-        #repository: tranquilitybase-io/tb-houston-service
-        #repository: karwootang-gft/tb-houston-service
         repository: stugit/actions
-        path: .
+        path: actions
         fetch-depth: 0
     - name: Set up Python 3.6
       uses: actions/setup-python@v1
       with:
         python-version: 3.6
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+#    - name: Install dependencies
+#      run: |
+#        cd "${GITHUB_WORKSPACE}/actions"
+#        python -m pip install --upgrade pip
+#        pip install -r requirements.txt
     - name: run semver, store in step variable version
       shell: bash
       run: |
-        echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
-      id: get_version
+        cd "${GITHUB_WORKSPACE}/actions"
+        echo "##[set-output name=version;]$(python scripts/semver.py --patch }} )"
+      id: semver
+#    - name: Setup tmate session
+#      uses: mxschmitt/action-tmate@v2
     - name: check if version variable is set
       shell: bash
       run: |
-        if [[ -z ${{ steps.get_version.outputs.version }} ]]; then
+        if [[ -z ${{ steps.semver.outputs.version }} ]]; then
           echo "Error: version in environment is not set." 1>&2
           exit 1
         fi
@@ -52,14 +65,16 @@ jobs:
     - name: git add, commit and push
       shell: bash
       run: |
+        cd "${GITHUB_WORKSPACE}/actions"
         git config user.email git.action@gft.com
         git config user.name "git.action"
         git add version.json
         git commit -m "Add version.json"
-        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ steps.get_version_outputs.version }}"
+        git tag -a "internal-v${{ steps.semver.outputs.version }}" -m "semver tagging ${{ steps.semver.version }}"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        branch: ${{ steps.extract_branch.outputs.branch }}
+        branch: ${{ steps.server.outputs.branch }}
         force: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: /home/runner/work/actions/actions

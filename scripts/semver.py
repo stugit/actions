@@ -82,13 +82,13 @@ class Semver():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument('-b', '--branch_name', metavar='<branch_name>', 
-        type=str, required=True, 
+        type=str, required=False, 
         help="The branch name.")
-    ap.add_argument('-p', '--patch', action='store_true', default=False, 
+    ap.add_argument('-p', '--patch', dest='patch', action='store_true', default=False, 
         help="Increment the patch number.") 
-    ap.add_argument('-m', '--minor', action='store_true', default=False, 
+    ap.add_argument('-m', '--minor', dest='minor', action='store_true', default=False, 
         help="Increment the minor number.") 
-    ap.add_argument('-M', '--Major', action='store_true', default=False, 
+    ap.add_argument('-M', '--major', dest='major', action='store_true', default=False, 
         help="Increment the Major number.") 
     args = ap.parse_args()
     #print(f"Using branch: {args.branch_name}")
@@ -98,11 +98,14 @@ if __name__ == "__main__":
 
     sv = Semver("version.json")
     if args.patch:
-    	v = sv.get_next_version("patch")
+        print('patch')
+    	v = sv.get_next_version(release_type = "patch")
     elif args.minor:
-    	v = sv.get_next_version("minor")
-    elif args.Major:
-    	v = sv.get_next_version("major")
+        print('minor')
+    	v = sv.get_next_version(release_type = "minor")
+    elif args.major:
+        print('major')
+    	v = sv.get_next_version(release_type = "major")
     else:
     	v = sv.get_next_version_from_branch(branch=args.branch_name)
     sv.commit()
