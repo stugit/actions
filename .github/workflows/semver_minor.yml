@@ -19,11 +19,11 @@ jobs:
     - name: Extract current branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+      id: branch
     - name: Echo Branch Name
       shell: bash
       run: |
-        echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+        echo Branch name: ${{ steps.branch.outputs.branch }}
     - uses: actions/checkout@v2
       with:
         #repository: tranquilitybase-io/tb-houston-service
@@ -63,7 +63,7 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        branch: ${{ steps.extract_branch.outputs.branch }}
+        branch: ${{ steps.branch.outputs.branch }}
         force: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
         directory: /home/runner/work/actions/actions
