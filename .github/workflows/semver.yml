@@ -40,16 +40,16 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
+        cd "${GITHUB_WORKSPACE}/actions"
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-      working-directory: "${GITHUB_WORKSPACE}/actions"
     - name: run semver, store in step variable version
       shell: bash
       run: |
+        cd "${GITHUB_WORKSPACE}/actions"
         echo "##[set-output name=commit_count;]$( git rev-list --count --no-merges master.. )"
         echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.branch.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
       id: semver
-      working-directory: "${GITHUB_WORKSPACE}/actions"
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v2
     - name: check if version variable is set
