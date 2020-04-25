@@ -98,13 +98,10 @@ if __name__ == "__main__":
 
     sv = Semver("version.json")
     if args.patch:
-        print('patch')
-    	v = sv.get_next_version(release_type = "patch")
+        v = sv.get_next_version(release_type = "patch")
     elif args.minor:
-        print('minor')
     	v = sv.get_next_version(release_type = "minor")
     elif args.major:
-        print('major')
     	v = sv.get_next_version(release_type = "major")
     else:
     	v = sv.get_next_version_from_branch(branch=args.branch_name)
