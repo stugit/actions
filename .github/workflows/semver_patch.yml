@@ -6,7 +6,7 @@ name: semver patch
 
 on:
   push:
-    branch-excludes: [ master ]
+    branches-ignore: [ master ]
 
 
 jobs:
