@@ -5,7 +5,7 @@ name: semver
 #name: Houston Service - semver workflow
 
 on:
-  push:
+  create
 
 jobs:
   build:
@@ -16,21 +16,15 @@ jobs:
     - name: Extract current branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: branch
+      id: extract_branch
     - name: Echo Branch Name
       shell: bash
       run: |
         echo Branch name: ${{ steps.extract_branch.outputs.branch }}
-    - name: Echo environment
-      shell: bash
-      run: |
-        env
-        echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
-        echo "GITHUB_EVENT_PATH"
-        cat "${GITHUB_EVENT_PATH}"
-
     - uses: actions/checkout@v2
       with:
+        #repository: tranquilitybase-io/tb-houston-service
+        #repository: karwootang-gft/tb-houston-service
         repository: stugit/actions
         path: .
         fetch-depth: 0
@@ -45,13 +39,12 @@ jobs:
     - name: run semver, store in step variable version
       shell: bash
       run: |
-        echo "##[set-output name=commit_count;]$(git rev-list --count --no-merges master..)"
-        echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.branch.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
-      id: semver
+        echo "##[set-output name=version;]$(python scripts/semver.py ${{ steps.extract_branch.outputs.branch }})"
+      id: get_version
     - name: check if version variable is set
       shell: bash
       run: |
-        if [[ -z ${{ steps.semver.outputs.version }} ]]; then
+        if [[ -z ${{ steps.get_version.outputs.version }} ]]; then
           echo "Error: version in environment is not set." 1>&2
           exit 1
         fi
@@ -63,10 +56,10 @@ jobs:
         git config user.name "git.action"
         git add version.json
         git commit -m "Add version.json"
-        git tag -a "internal-v${{ steps.semver.outputs.version }}" -m "semver tagging ${{ steps.semver.version }}"
+        git tag -a "internal-v${{ steps.get_version.outputs.version }}" -m "semver tagging ${{ steps.get_version_outputs.version }}"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        branch: ${{ steps.server.outputs.branch }}
+        branch: ${{ steps.extract_branch.outputs.branch }}
         force: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
