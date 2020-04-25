@@ -48,10 +48,11 @@ jobs:
       shell: bash
       run: |
         cd "${GITHUB_WORKSPACE}/actions"
-        git branch
         echo "##[set-output name=commit_count;]$( git rev-list --count --no-merges 'master..' )"
         echo "##[set-output name=version;]$(python scripts/semver.py -b \"${{ steps.branch.outputs.branch }}\" -c \"${{ steps.semver.outputs.commit_count }}\" )"
       id: semver
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v2
     - name: check if version variable is set
       shell: bash
       run: |
