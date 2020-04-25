@@ -22,11 +22,9 @@ jobs:
     - name: Echo Branch Name
       shell: bash
       run: |
-        echo Branch name: ${{ steps.extract_branch.outputs.branch }}
+        echo Branch name: ${{ steps.extract_branch.outputs.branch }} 
     - uses: actions/checkout@v2
       with:
-        #repository: tranquilitybase-io/tb-houston-service
-        #repository: karwootang-gft/tb-houston-service
         repository: stugit/actions
         path: .
         fetch-depth: 0
