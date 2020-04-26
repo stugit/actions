@@ -75,7 +75,8 @@ then
 			new="v$new"
 	fi
 
-	if $tag_prefix
+        # if not empty
+	if ! -z $tag_prefix
 	then
 			new="${tag_prefix}${new}"
 	fi
