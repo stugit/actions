@@ -1,0 +1,45 @@
+# This workflow will run semver.pl and update the versions.json file in the root folder.
+# The version.jsonfile is then added, commited and pushed to the current branch.
+
+name: semver minor
+#name: Houston Service - semver workflow
+
+on:
+  push
+    branches:
+      - master
+
+jobs:
+  initialize:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Extract current branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: branch
+    - name: Echo Branch Name
+      shell: bash
+      run: |
+        echo Branch name: ${{ steps.branch.outputs.branch }}
+    - uses: actions/checkout@v2
+      with:
+        #repository: tranquilitybase-io/tb-houston-service
+        #repository: karwootang-gft/tb-houston-service
+        repository: stugit/actions
+        path: .
+        fetch-depth: 0
+
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: '0'
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@1.17.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        DEFAULT_DUMP: patch
+        SOURCE: actions 
