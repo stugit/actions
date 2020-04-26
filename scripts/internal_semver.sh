@@ -66,7 +66,7 @@ case "$log" in
     *#major* ) new=$(bash scripts/semver bump major $tag);;
     *#minor* ) new=$(bash scripts/semver bump minor $tag);;
     *#patch* ) new=$(bash scripts/semver bump patch $tag);;
-    * ) new=$(scripts/semver bump `echo $default_semvar_bump` $tag);;
+    * ) new=$(bash scripts/semver bump `echo $default_semvar_bump` $tag);;
 esac
 
 # did we get a new tag?
