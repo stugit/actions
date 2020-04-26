@@ -39,4 +39,4 @@ jobs:
         WITH_V: true
         DEFAULT_DUMP: patch
         SOURCE: actions 
-        GITHUB_WORKSPACE="${GITHUB_WORKSPACE}"
+        GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}
