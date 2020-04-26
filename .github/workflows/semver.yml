@@ -26,7 +26,7 @@ jobs:
         #repository: tranquilitybase-io/tb-houston-service
         #repository: karwootang-gft/tb-houston-service
         repository: stugit/actions
-        path: .
+        path: ${GITHUB_WORKSPACE}
         fetch-depth: 0
 
   tag:
