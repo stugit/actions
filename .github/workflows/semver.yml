@@ -32,7 +32,7 @@ jobs:
         cd ${GITHUB_WORKSPACE}/actions
         bash -x scripts/internal_semver.sh 
       env: 
-        GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SOURCE: actions
         PRE_RELEASE: "true"
         TAG_PREFIX: "internal-"
