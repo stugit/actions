@@ -24,11 +24,6 @@ jobs:
   tag:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: stugit/actions
-        path: actions
-        fetch-depth: 0
     - uses: actions/checkout@master
       with:
         fetch-depth: '0'
@@ -37,6 +32,3 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
-        DEFAULT_DUMP: patch
-        WORKDIR: ${GITHUB_WORKSPACE}
-        SOURCE: actions 
