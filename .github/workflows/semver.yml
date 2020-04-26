@@ -19,16 +19,29 @@ jobs:
       shell: bash
       run: |
         echo Branch name: ${{ steps.branch.outputs.branch }}
-        env
 
-  tag:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
       with:
-        fetch-depth: '0'
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.19.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
+        repository: stugit/actions
+        path: actions
+        fetch-depth: 0
+  
+    - name: run semver
+      shell: bash
+      run: |
+        cd "${GITHUB_WORKSPACE}/actions"
+        scripts/internal_semver.sh 
+      env: 
+        GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
+
+#  tag:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@master
+#      with:
+#        fetch-depth: '0'
+#    - name: Bump version and push tag
+#      uses: anothrNick/github-tag-action@1.19.0
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        WITH_V: true
