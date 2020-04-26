@@ -36,6 +36,7 @@ jobs:
         SOURCE: actions
         TAG_PREFIX: "internal-"
         WITH_V: "true"
+        DEFAULT_BUMP: "patch"
 
 #  tag:
 #    runs-on: ubuntu-latest
