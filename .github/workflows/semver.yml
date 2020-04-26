@@ -29,10 +29,10 @@ jobs:
     - name: run semver
       shell: bash
       run: |
-        ls -alrt ${GITHUB_WORKSPACE}/actions/scripts
         bash -x ${GITHUB_WORKSPACE}/actions/scripts/internal_semver.sh 
       env: 
         GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
+        SOURCE: actions
 
 #  tag:
 #    runs-on: ubuntu-latest
