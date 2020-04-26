@@ -27,7 +27,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: stugit/actions
-        path: ${GITHUB_WORKSPACE}/actions
+        path: actions
         fetch-depth: 0
     - uses: actions/checkout@master
       with:
@@ -39,3 +39,4 @@ jobs:
         WITH_V: true
         DEFAULT_DUMP: patch
         SOURCE: actions 
+        GITHUB_WORKSPACE="${GITHUB_WORKSPACE}"
