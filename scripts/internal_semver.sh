@@ -8,6 +8,10 @@ custom_tag=${CUSTOM_TAG}
 source=${SOURCE:-.}
 dryrun=${DRY_RUN:-false}
 
+
+# KT - Allow override pre_release
+pre_release=${PRE_RELEASE:-false}
+
 cd ${GITHUB_WORKSPACE}/${source}
 
 pre_release="true"
