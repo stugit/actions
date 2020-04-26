@@ -9,8 +9,7 @@ source=${SOURCE:-.}
 dryrun=${DRY_RUN:-false}
 
 
-# KT - Allow override pre_release
-pre_release=${PRE_RELEASE:-false}
+# KT - add tag_prefix
 tag_prefix=${TAG_PREFIX:-internal-}
 
 cd ${GITHUB_WORKSPACE}/${source}
@@ -24,6 +23,10 @@ for b in "${branch[@]}"; do
         pre_release="false"
     fi
 done
+
+# KT - Allow override pre_release
+pre_release=${PRE_RELEASE:-false}
+
 echo "pre_release = $pre_release"
 
 # fetch tags
@@ -107,11 +110,11 @@ fi
 echo ::set-output name=tag::$new
 
 
-#if $pre_release
-#then
-#    echo "This branch is not a release branch. Skipping the tag creation."
-#    exit 0
-#fi
+if $pre_release
+then
+    echo "This branch is not a release branch. Skipping the tag creation."
+    exit 0
+fi
 
 # push new tag ref to github
 dt=$(date '+%Y-%m-%dT%H:%M:%SZ')
