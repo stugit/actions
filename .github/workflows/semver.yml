@@ -18,20 +18,18 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: branch
     - name: Echo Branch Name
-      shell: bash
-      run: |
-        echo Branch name: ${{ steps.branch.outputs.branch }}
-    - uses: actions/checkout@v2
-      with:
-        #repository: tranquilitybase-io/tb-houston-service
-        #repository: karwootang-gft/tb-houston-service
-        repository: stugit/actions
-        path: ${GITHUB_WORKSPACE}
-        fetch-depth: 0
+      run: echo Branch name: ${{ steps.branch.outputs.branch }}
+    - name: echo ENV
+      run: env
 
   tag:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: stugit/actions
+        path: ${GITHUB_WORKSPACE}/actions
+        fetch-depth: 0
     - uses: actions/checkout@master
       with:
         fetch-depth: '0'
