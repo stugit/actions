@@ -8,6 +8,10 @@ custom_tag=${CUSTOM_TAG}
 source=${SOURCE:-.}
 dryrun=${DRY_RUN:-false}
 
+
+# KT - Allow override pre_release
+pre_release=${PRE_RELEASE:-false}
+
 cd ${GITHUB_WORKSPACE}/${source}
 
 pre_release="true"
@@ -25,7 +29,8 @@ echo "pre_release = $pre_release"
 git fetch --tags
 
 # get latest tag that looks like a semver (with or without v)
-tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname)' refs/tags/[0-9]*.[0-9]*.[0-9]* refs/tags/v[0-9]*.[0-9]*.[0-9]* | cut -d / -f 3-)
+#tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname)' refs/tags/[0-9]*.[0-9]*.[0-9]* refs/tags/v[0-9]*.[0-9]*.[0-9]* | cut -d / -f 3-)
+tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname)' refs/tags/internal-v[0-9]*.[0-9]*.[0-9]* | cut -d / -f 3-)
 tag_commit=$(git rev-list -n 1 $tag)
 
 # get current commit hash for tag
