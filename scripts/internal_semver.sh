@@ -11,6 +11,7 @@ dryrun=${DRY_RUN:-false}
 
 # KT - Allow override pre_release
 pre_release=${PRE_RELEASE:-false}
+tag_prefix=${TAG_PREFIX:-internal-}
 
 cd ${GITHUB_WORKSPACE}/${source}
 
@@ -30,7 +31,8 @@ git fetch --tags
 
 # get latest tag that looks like a semver (with or without v)
 #tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname)' refs/tags/[0-9]*.[0-9]*.[0-9]* refs/tags/v[0-9]*.[0-9]*.[0-9]* | cut -d / -f 3-)
-tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname)' refs/tags/internal-v[0-9]*.[0-9]*.[0-9]* | cut -d / -f 3-)
+tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname)'  refs/tags/${tag_prefix}[0-9]*.[0-9]*.[0-9]* refs/tags/${tag_prefix}v[0-9]*.[0-9]*.[0-9]* | cut -d / -f 3-)
+
 tag_commit=$(git rev-list -n 1 $tag)
 
 # get current commit hash for tag
@@ -49,6 +51,8 @@ then
     tag=0.0.0
 else
     log=$(git log $tag..HEAD --pretty='%B')
+    # remove tag prefix
+    tag=${tag#"${tag_prefix}"}
 fi
 
 echo $log
@@ -56,10 +60,10 @@ echo $log
 # get commit logs and determine home to bump the version
 # supports #major, #minor, #patch (anything else will be 'minor')
 case "$log" in
-    *#major* ) new=$(semver bump major $tag);;
-    *#minor* ) new=$(semver bump minor $tag);;
-    *#patch* ) new=$(semver bump patch $tag);;
-    * ) new=$(semver bump `echo $default_semvar_bump` $tag);;
+    *#major* ) new=$(scripts/semver bump major $tag);;
+    *#minor* ) new=$(scripts/semver bump minor $tag);;
+    *#patch* ) new=$(scripts/semver bump patch $tag);;
+    * ) new=$(scripts/semver bump `echo $default_semvar_bump` $tag);;
 esac
 
 # did we get a new tag?
@@ -69,6 +73,11 @@ then
 	if $with_v
 	then
 			new="v$new"
+	fi
+
+	if $tag_prefix
+	then
+			new="${tag_prefix}${new}"
 	fi
 
 	if $pre_release

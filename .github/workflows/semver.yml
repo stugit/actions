@@ -29,12 +29,13 @@ jobs:
     - name: run semver
       shell: bash
       run: |
-        cd ${GITHUB_WORKSPACE}/actions/scripts
-        bash -x internal_semver.sh 
+        cd ${GITHUB_WORKSPACE}/actions
+        bash -x scripts/internal_semver.sh 
       env: 
         GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
         SOURCE: actions
         PRE_RELEASE: true
+        TAG_PREFIX: "internal-"
 
 #  tag:
 #    runs-on: ubuntu-latest
