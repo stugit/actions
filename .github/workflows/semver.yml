@@ -27,9 +27,10 @@ jobs:
         fetch-depth: 0
   
     - name: run semver
-      shell: bash
+      shell: bash -x
       run: |
-        bash -x ${GITHUB_WORKSPACE}/actions/scripts/internal_semver.sh 
+        export PATH=$PATH:${GITHUB_WORKSPACE}/scripts/
+        internal_semver.sh 
       env: 
         GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
         SOURCE: actions
