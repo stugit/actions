@@ -29,9 +29,8 @@ jobs:
     - name: run semver
       shell: bash
       run: |
-        cd ${GITHUB_WORKSPACE}/actions
-        export PATH=$PATH:${GITHUB_WORKSPACE}/scripts/
-        bash -x scripts/internal_semver.sh 
+        cd ${GITHUB_WORKSPACE}/actions/scripts
+        bash -x internal_semver.sh 
       env: 
         GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
         SOURCE: actions
