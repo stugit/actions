@@ -5,9 +5,8 @@ name: semver minor
 #name: Houston Service - semver workflow
 
 on:
-  push
-    branches:
-      - master
+  push:
+    branches: [ master ]
 
 jobs:
   initialize:
