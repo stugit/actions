@@ -76,7 +76,7 @@ then
 	fi
 
         # if not empty
-	if ! -z $tag_prefix
+	if [ ! -z $tag_prefix ]
 	then
 			new="${tag_prefix}${new}"
 	fi
