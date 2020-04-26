@@ -38,4 +38,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         DEFAULT_DUMP: patch
+        WORKDIR: ${GITHUB_WORKSPACE}
         SOURCE: actions 
