@@ -60,9 +60,9 @@ echo $log
 # get commit logs and determine home to bump the version
 # supports #major, #minor, #patch (anything else will be 'minor')
 case "$log" in
-    *#major* ) new=$(scripts/semver bump major $tag);;
-    *#minor* ) new=$(scripts/semver bump minor $tag);;
-    *#patch* ) new=$(scripts/semver bump patch $tag);;
+    *#major* ) new=$(bash scripts/semver bump major $tag);;
+    *#minor* ) new=$(bash scripts/semver bump minor $tag);;
+    *#patch* ) new=$(bash scripts/semver bump patch $tag);;
     * ) new=$(scripts/semver bump `echo $default_semvar_bump` $tag);;
 esac
 
