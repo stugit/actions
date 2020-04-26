@@ -34,7 +34,7 @@ jobs:
       env: 
         GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
         SOURCE: actions
-        PRE_RELEASE: true
+        PRE_RELEASE: "true"
         TAG_PREFIX: "internal-"
 
 #  tag:
