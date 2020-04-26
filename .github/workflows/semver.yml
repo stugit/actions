@@ -27,7 +27,7 @@ jobs:
         fetch-depth: 0
   
     - name: run semver
-      shell: bash -x
+      shell: bash
       run: |
         export PATH=$PATH:${GITHUB_WORKSPACE}/scripts/
         internal_semver.sh 
