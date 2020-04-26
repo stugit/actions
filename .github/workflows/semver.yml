@@ -18,9 +18,10 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: branch
     - name: Echo Branch Name
-      run: echo Branch name: ${{ steps.branch.outputs.branch }}
-    - name: echo ENV
-      run: env
+      shell: bash
+      run: |
+        echo Branch name: ${{ steps.branch.outputs.branch }}
+        env
 
   tag:
     runs-on: ubuntu-latest
