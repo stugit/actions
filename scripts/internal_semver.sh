@@ -107,11 +107,11 @@ fi
 echo ::set-output name=tag::$new
 
 
-if $pre_release
-then
-    echo "This branch is not a release branch. Skipping the tag creation."
-    exit 0
-fi
+#if $pre_release
+#then
+#    echo "This branch is not a release branch. Skipping the tag creation."
+#    exit 0
+#fi
 
 # push new tag ref to github
 dt=$(date '+%Y-%m-%dT%H:%M:%SZ')
