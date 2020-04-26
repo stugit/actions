@@ -1,12 +1,10 @@
 # This workflow will run semver.pl and update the versions.json file in the root folder.
 # The version.jsonfile is then added, commited and pushed to the current branch.
 
-name: semver minor
-#name: Houston Service - semver workflow
+name: semver
 
 on:
-  push:
-    branches: [ master ]
+  push
 
 jobs:
   initialize:
