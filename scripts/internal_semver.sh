@@ -8,9 +8,10 @@ custom_tag=${CUSTOM_TAG}
 source=${SOURCE:-.}
 dryrun=${DRY_RUN:-false}
 
-
 # KT - add tag_prefix
 tag_prefix=${TAG_PREFIX:-internal-}
+
+git log --format="%H" -n 2
 
 cd ${GITHUB_WORKSPACE}/${source}
 
