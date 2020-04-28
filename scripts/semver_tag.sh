@@ -11,9 +11,7 @@ dryrun=${DRY_RUN:-false}
 # KT - add tag_prefix
 tag_prefix=${TAG_PREFIX:-internal-}
 
-git branch --contains $(git log --format=%H -n 1 | tail - 1)
-git branch --contains $(git log --format=%H -n 2 | tail - 1)
-git branch --contains $(git log --format=%H -n 3 | tail - 1)
+git show -n1 --merges --oneline
 
 cd ${GITHUB_WORKSPACE}/${source}
 
