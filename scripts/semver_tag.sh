@@ -15,6 +15,7 @@ tag_prefix=${TAG_PREFIX:-internal-}
 if [[ "$(git show -n1 --merges --oneline | grep -c '/feature/')" -gt 1 ]]; then
     default_semvar_bump=minor
 fi
+echo "default_semvar_bump: ${default_semvar_bump}"
 
 cd ${GITHUB_WORKSPACE}/${source}
 
@@ -30,7 +31,6 @@ done
 
 # KT - Allow override pre_release
 pre_release=${PRE_RELEASE:-false}
-
 echo "pre_release = $pre_release"
 
 # fetch tags
