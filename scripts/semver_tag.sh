@@ -11,7 +11,9 @@ dryrun=${DRY_RUN:-false}
 # KT - add tag_prefix
 tag_prefix=${TAG_PREFIX:-internal-}
 
+echo "GITSHOW START"
 git show -n1 --merges --oneline
+echo "GITSHOW END"
 
 cd ${GITHUB_WORKSPACE}/${source}
 
