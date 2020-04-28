@@ -30,7 +30,7 @@ jobs:
       shell: bash
       run: |
         cd ${GITHUB_WORKSPACE}/actions
-        bash -x scripts/internal_semver.sh 
+        bash -x scripts/semver_tag.sh 
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SOURCE: actions
