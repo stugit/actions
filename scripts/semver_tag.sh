@@ -11,11 +11,9 @@ dryrun=${DRY_RUN:-false}
 # KT - add tag_prefix
 tag_prefix=${TAG_PREFIX:-internal-}
 
-
 if [[ git show -n1 --merges --oneline | grep "/feature/" ]]; then
     default_semvar_bump=minor
 fi
-
 
 cd ${GITHUB_WORKSPACE}/${source}
 
