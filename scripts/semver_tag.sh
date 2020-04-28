@@ -11,7 +11,8 @@ dryrun=${DRY_RUN:-false}
 # KT - add tag_prefix
 tag_prefix=${TAG_PREFIX:-internal-}
 
-if [[ git show -n1 --merges --oneline | grep "/feature/" ]]; then
+# Was the last merge a feature branch (check merge comment)
+if [[ "git show -n1 --merges --oneline | grep -c '/feature/'" -gt 1 ]]; then
     default_semvar_bump=minor
 fi
 
