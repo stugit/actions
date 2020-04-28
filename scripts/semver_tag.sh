@@ -12,7 +12,7 @@ dryrun=${DRY_RUN:-false}
 tag_prefix=${TAG_PREFIX:-internal-}
 
 # Was the last merge a feature branch (check merge comment)
-if [[ "git show -n1 --merges --oneline | grep -c '/feature/'" -gt 1 ]]; then
+if [[ "$(git show -n1 --merges --oneline | grep -c '/feature/')" -gt 1 ]]; then
     default_semvar_bump=minor
 fi
 
