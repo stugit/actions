@@ -7,7 +7,7 @@ name: api-docs
 
 on:
   push:
-    branches-ignore: [ master ]
+    branches: [ master ]
 
 jobs:
   build:
