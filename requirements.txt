@@ -38,7 +38,7 @@ PyMySQL==0.9.3
 pyrsistent==0.15.7
 PyYAML==5.3
 requests==2.23.0
-rsa==4.0
+rsa==4.1
 six==1.12.0
 SQLAlchemy==1.3.0
 swagger-ui-bundle==0.0.6
