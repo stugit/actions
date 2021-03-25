@@ -36,7 +36,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 PyMySQL==0.9.3
 pyrsistent==0.15.7
-PyYAML==5.3
+PyYAML==5.4
 requests==2.23.0
 rsa==4.0
 six==1.12.0
