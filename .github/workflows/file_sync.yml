@@ -1,0 +1,16 @@
+on:
+  schedule: 
+    # At minute 10 every day of the week
+    - cron: "10 * * * *"
+  # Allow manual runs on default branch
+  workflow_dispatch:
+    inputs:
+      template_version:
+        required: true
+
+defaults:
+  run:
+    shell: bash
+
+name: hello
+    
